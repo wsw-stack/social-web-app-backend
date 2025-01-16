@@ -62,5 +62,19 @@ export const login = async (req: any, res: any, next: any) => {
     if(!isMatch) {
         return res.status(401).json({ message: "Wrong password or username" });
     }
-    res.status(200).json({message: "Login successfully, please wait to be directed to home page"});
+    // successfully logged in
+    req.session.user = existingUser.id
+    console.log(req.session)
+    req.session.save((err: any) => {
+        if (err) {
+            return next(err);
+        }
+        res.status(200).json({ message: "Login successfully, please wait to be directed to home page" });
+    });
 };
+
+export const getUser = async (req: any, res: any, next: any) => {
+    const {id} = req.params
+    const user = await User.findById(id)
+    res.json(user)
+}
