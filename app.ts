@@ -6,6 +6,7 @@ import MongoStore from 'connect-mongo'
 
 import userRoutes from './routes/userRoutes'
 import sessionRoutes from './routes/sessionRoutes'
+import postRoutes from './routes/postRoutes'
 import cors from 'cors'
 
 const app = express();
@@ -29,7 +30,7 @@ const sessionConfig = {
 const corsOptions = {
     origin: "http://localhost:3000",
     credentials: true,
-  };
+};
   
 app.use(cors(corsOptions));
 app.use(session(sessionConfig))
@@ -37,6 +38,7 @@ app.use(bodyParser.json());
 
 app.use('/api/users', userRoutes)
 app.use('/api/sessions', sessionRoutes)
+app.use('/api/posts', postRoutes)
 
 mongoose
     .connect(
