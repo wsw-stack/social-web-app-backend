@@ -1,10 +1,10 @@
 import Post from "../schemas/Post"
 
 export const sendNewPost = async (req: any, res: any) => {
-    const {userId, content} = req.body
+    const {user, content} = req.body
     try{
         const newPost: any = new Post({
-            userId,
+            user,
             content
         })
         await newPost.save()
@@ -12,6 +12,22 @@ export const sendNewPost = async (req: any, res: any) => {
     }
     catch(err) {
         console.log(err)
+        res.json({error: err})
+    }
+}
+
+export const getAllPosts = async (req: any, res: any) => {
+    try {
+        const allPosts: any = await Post.find({})
+        const allPopulatedPosts = []
+        for(const post of allPosts) {
+            const populatedPosts = await post.populate('user')
+            console.log(populatedPosts)
+            allPopulatedPosts.push(populatedPosts)
+        }
+        res.json({posts: allPopulatedPosts})
+    }
+    catch(err) {
         res.json({error: err})
     }
 }

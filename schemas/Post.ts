@@ -1,15 +1,15 @@
 import mongoose, { Schema } from 'mongoose'
 
 interface IPost extends Document {
-  userId: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;
   content: string;
 }
 
 const postSchema = new mongoose.Schema<IPost>({
-  userId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    unique: true,
+  user: {
+    type: Schema.Types.ObjectId, 
+    ref: 'User',
+    required: true
   },
   content: {
     type: String,
