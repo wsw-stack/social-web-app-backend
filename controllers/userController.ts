@@ -3,6 +3,7 @@ import { Request } from "express-validator/lib/base";
 
 import User from "../schemas/User";
 import { validationResult } from "express-validator";
+import Session from "../schemas/Session";
 
 const saltRounds = 10;
 
@@ -64,7 +65,6 @@ export const login = async (req: any, res: any, next: any) => {
     }
     // successfully logged in
     req.session.user = existingUser.id
-    console.log(req.session)
     req.session.save((err: any) => {
         if (err) {
             return next(err);
@@ -72,6 +72,15 @@ export const login = async (req: any, res: any, next: any) => {
         res.status(200).json({ message: "Login successfully, please wait to be directed to home page" });
     });
 };
+
+export const logout = async (req: any, res: any, next: any) => {
+    try {
+        await Session.deleteOne({})
+    } catch {
+        console.log('Something went wrong!')
+    }
+    res.json({success: 'successfully logged out'})
+}
 
 export const getUser = async (req: any, res: any, next: any) => {
     const {id} = req.params

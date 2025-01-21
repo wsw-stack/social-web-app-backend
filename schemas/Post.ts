@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose'
 interface IPost extends Document {
   user: Schema.Types.ObjectId;
   content: string;
+  likes: Schema.Types.ObjectId[]
 }
 
 const postSchema = new mongoose.Schema<IPost>({
@@ -15,7 +16,8 @@ const postSchema = new mongoose.Schema<IPost>({
     type: String,
     maxLength: 1000,
     required: true
-  }
+  },
+  likes: {type: [Schema.Types.ObjectId]}
 })
 
 const Post = mongoose.model('Post', postSchema)

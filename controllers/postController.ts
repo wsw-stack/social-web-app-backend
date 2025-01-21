@@ -31,3 +31,13 @@ export const getAllPosts = async (req: any, res: any) => {
         res.json({error: err})
     }
 }
+
+export const getPost = async (req: any, res: any) => {
+    const {id} = req.params
+    try {
+        const post = await Post.findById(id).populate('user', 'username')
+        res.json(post)
+    } catch {
+        console.log('Something went wrong!')
+    }   
+}

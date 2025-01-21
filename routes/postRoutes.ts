@@ -1,11 +1,13 @@
 import express from 'express'
 import Post from '../schemas/Post'
-import { sendNewPost, getAllPosts } from '../controllers/postController'
+import * as postController from '../controllers/postController'
 
 const router = express.Router()
 
 router.route('/')
-    .post(sendNewPost)
-    .get(getAllPosts)
+    .post(postController.sendNewPost)
+    .get(postController.getAllPosts)
+
+router.route('/:id').get(postController.getPost)
 
 export default router
