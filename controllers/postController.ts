@@ -41,3 +41,20 @@ export const getPost = async (req: any, res: any) => {
         console.log('Something went wrong!')
     }   
 }
+
+export const updatePost = async (req: any, res: any) => {
+    const {id, user, content, likes} = req.body
+    try {
+        const updatedPost: any = await Post.findByIdAndUpdate(id, {
+            user,
+            content,
+            likes
+        })
+        console.log(updatedPost)
+        await updatedPost.save()
+        res.json({success: 'Successfully updated!'})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+}

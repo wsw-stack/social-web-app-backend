@@ -9,5 +9,6 @@ router.route('/')
     .get(postController.getAllPosts)
 
 router.route('/:id').get(postController.getPost)
+    .put(postController.updatePost)
 
 export default router
