@@ -1,5 +1,4 @@
 import express from 'express'
-import Post from '../schemas/Post'
 import * as postController from '../controllers/postController'
 
 const router = express.Router()

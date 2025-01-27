@@ -21,14 +21,18 @@ export const getAllPosts = async (req: any, res: any) => {
         const allPosts: any = await Post.find({})
         const allPopulatedPosts = []
         for(const post of allPosts) {
-            const populatedPosts = await post.populate('user')
-            console.log(populatedPosts)
-            allPopulatedPosts.push(populatedPosts)
+            await post.populate('user', 'username')
+            await post.populate({
+                path: 'reviews',
+                populate: { path: 'user', select: 'username' },
+            });
+            allPopulatedPosts.push(post)
         }
         res.json({posts: allPopulatedPosts})
     }
-    catch(err) {
-        res.json({error: err})
+    catch(error) {
+        console.log(error)
+        res.json({error: error})
     }
 }
 
@@ -36,6 +40,14 @@ export const getPost = async (req: any, res: any) => {
     const {id} = req.params
     try {
         const post = await Post.findById(id).populate('user', 'username')
+        await post?.populate({
+            path: 'reviews',
+            populate: {
+                path: 'user',
+                select: 'username'
+            }
+        })
+
         res.json(post)
     } catch {
         console.log('Something went wrong!')
@@ -50,7 +62,6 @@ export const updatePost = async (req: any, res: any) => {
             content,
             likes
         })
-        console.log(updatedPost)
         await updatedPost.save()
         res.json({success: 'Successfully updated!'})
     } catch(err) {
