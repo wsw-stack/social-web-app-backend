@@ -8,6 +8,7 @@ router.route('/')
     .post(reviewController.sendNewReview)
     
 router.route('/:id')
+    .get(reviewController.getAReview)
     .put(reviewController.updateReview)
 
 export default router

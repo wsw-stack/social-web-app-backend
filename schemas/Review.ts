@@ -1,9 +1,10 @@
 import mongoose, { Schema } from 'mongoose'
 
 interface IReview extends Document {
-    user: Schema.Types.ObjectId;
-    content: string;
-    likes: Schema.Types.ObjectId[],
+    user: Schema.Types.ObjectId
+    post: Schema.Types.ObjectId
+    content: string
+    likes: Schema.Types.ObjectId[]
     replies: Schema.Types.ObjectId[]
 }
 
@@ -11,6 +12,11 @@ const reviewSchema = new mongoose.Schema<IReview>({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
+        required: true
+    },
+    post: {
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
         required: true
     },
     content: {
