@@ -28,15 +28,13 @@ export const sendNewReview = async (req: any, res: any) => {
     const {postId, user, content} = req.body
     const review = new Review({
         user,
-        post:postId,
+        post: postId,
         content,
         likes: [],
         replies: []
     })
     try {
         const post: any = await Post.findById(postId)
-        console.log(postId)
-        console.log(post)
         post.reviews.push(review)
         await review.save()
         await post.save()
