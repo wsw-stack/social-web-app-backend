@@ -1,4 +1,6 @@
+import mongoose from "mongoose"
 import Post from "../schemas/Post"
+import Review from "../schemas/Review"
 
 export const sendNewPost = async (req: any, res: any) => {
     const {user, content} = req.body
@@ -64,6 +66,20 @@ export const updatePost = async (req: any, res: any) => {
         })
         await updatedPost.save()
         res.json({success: 'Successfully updated!'})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+}
+
+export const getReviewCount = async (req: any, res: any) => {
+    const {id} = req.params
+    try {
+        const result = await Review.aggregate( [
+            { $match: { post: new mongoose.Types.ObjectId(id) } },
+            { $count: "reviewCount" }
+        ])
+        res.json(result[0])
     } catch(err) {
         console.log(err)
         res.json({error: err})

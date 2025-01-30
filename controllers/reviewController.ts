@@ -16,7 +16,13 @@ export const getAReview = async (req: any, res: any) => {
     try {
         const review = await Review.findById(id)
         await review?.populate('user', 'username')
-        await review?.populate('replies')
+        await review?.populate({
+            path: 'replies',
+            populate: {
+              path: 'user',
+              select: 'username',
+            },
+        })  
         res.json({review: review})
     } catch (error) {
         console.log(error)
@@ -51,10 +57,54 @@ export const updateReview = async (req: any, res: any) => {
     try {
         const updatedReview: any = await Review.findByIdAndUpdate(id, updateFields, { new: true })
         await updatedReview.save()
-        console.log(updatedReview)
         res.json({success: 'Successfully updated!'})
     } catch(err) {
         console.log(err)
         res.json({error: err})
     }
+}
+
+export const replyToAReview = async (req: any, res: any) => {
+    const {id} = req.params
+    const {user, content} = req.body
+    try {
+        const review = await Review.findById(id)
+        const newReply: any = new Review({
+            user,
+            post: review?.post,
+            content,
+            likes: [],
+            replies: []
+        })
+        review?.replies.push(newReply)
+        await newReply.save()
+        await review?.save()
+        res.json({success: 'Successfully posted a reply!'})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+}
+
+export const getReplyCount = async (req: any, res: any) => {
+    const {id} = req.params
+    try {
+        const replyCount = await getAllReplies(id)
+        res.json({replyCount: replyCount})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+}
+
+const getAllReplies = async (id: number) => {
+    const review: any = await Review.findById(id);
+    const directReplies = review.replies
+    let count = directReplies.length;
+
+    for (const reply of directReplies) {
+        count += await getAllReplies(reply._id);
+    }
+
+    return count;
 }

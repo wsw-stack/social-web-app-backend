@@ -10,4 +10,6 @@ router.route('/')
 router.route('/:id').get(postController.getPost)
     .put(postController.updatePost)
 
+router.route('/:id/reviewCount').get(postController.getReviewCount)
+
 export default router
