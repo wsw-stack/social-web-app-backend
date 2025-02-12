@@ -14,4 +14,6 @@ router.route('/:id')
 
 router.route('/:id/replyCount').get(reviewController.getReplyCount)
 
+router.route('/user/:id').get(reviewController.getUserReviews)
+
 export default router

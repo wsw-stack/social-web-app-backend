@@ -108,3 +108,14 @@ const getAllReplies = async (id: number) => {
 
     return count;
 }
+
+export const getUserReviews = async (req: any, res: any) => {
+    const {id} = req.params
+    try {
+        const reviews = await Review.find({user: id})
+        res.json({reviews: reviews})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+}

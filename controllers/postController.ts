@@ -75,6 +75,10 @@ export const updatePost = async (req: any, res: any) => {
 export const getReviewCount = async (req: any, res: any) => {
     const {id} = req.params
     try {
+        const post = await Post.findById(id)
+        if(!post?.reviews || post.reviews.length === 0) {
+            res.json({reviewCount: 0})
+        }
         const result = await Review.aggregate( [
             { $match: { post: new mongoose.Types.ObjectId(id) } },
             { $count: "reviewCount" }
@@ -85,3 +89,14 @@ export const getReviewCount = async (req: any, res: any) => {
         res.json({error: err})
     }
 }
+
+export const getUserPosts = async (req: any, res: any) => {
+    const {id} = req.params
+    try {
+        const posts = await Post.find({user: id})
+        res.json({posts: posts})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+} 

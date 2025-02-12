@@ -10,7 +10,6 @@ const saltRounds = 10;
 export const register = async (req: Request, res: any, next: any) => {
     const errors: any = validationResult(req);
     if (!errors.isEmpty()) {
-        // console.log(errors.errors[0].msg)
         return res.status(400).json({ message: errors.errors[0].msg });
     }
     const { username, email, password } = req.body;
@@ -39,6 +38,8 @@ export const register = async (req: Request, res: any, next: any) => {
         email,
         password: hashedPassword,
         introduction: "",
+        followers: [],
+        following: []
     });
     try {
         await newUser.save();
@@ -84,6 +85,13 @@ export const logout = async (req: any, res: any, next: any) => {
 
 export const getUser = async (req: any, res: any, next: any) => {
     const {id} = req.params
-    const user = await User.findById(id)
+    const user = await User.findById(id).populate({
+        path: 'following',
+        select: "username introduction"
+    }).populate({
+        path: 'followers',
+        select: "username introduction",
+    })
+    
     res.json(user)
 }
