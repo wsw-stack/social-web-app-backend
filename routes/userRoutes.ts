@@ -14,6 +14,7 @@ router.post("/register",[
 router.post('/login', userController.login)
 
 router.get('/:id', userController.getUser)
+router.post('/follow/:id', userController.followUser)
 
 router.post('/logout', userController.logout)
 

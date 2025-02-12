@@ -95,3 +95,20 @@ export const getUser = async (req: any, res: any, next: any) => {
     
     res.json(user)
 }
+
+export const followUser = async (req: any, res: any, next: any) => {
+    const {id} = req.params
+    const { followerId } = req.body
+    try {
+        const user = await User.findById(id)
+        const follower = await User.findById(followerId)
+        user?.followers.push(followerId)
+        follower?.following.push(id)
+        await user?.save()
+        await follower?.save()
+        res.json({success: 'Successfully followed!'})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+}
