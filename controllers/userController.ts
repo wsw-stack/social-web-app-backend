@@ -112,3 +112,25 @@ export const followUser = async (req: any, res: any, next: any) => {
         res.json({error: err})
     }
 }
+
+export const unfollowUser = async (req: any, res: any, next: any) => {
+    const {id} = req.params
+    const { followerId } = req.body
+    try {
+        const user = await User.findById(id)
+        const follower = await User.findById(followerId)
+        if(user && follower) {
+            user.followers = user.followers.filter(userId => userId != followerId)
+            follower.following = follower.following.filter(userId => userId != id)
+        }
+        else {
+            res.json({error: 'either of the users cannot be found'})
+        }
+        await user?.save()
+        await follower?.save()
+        res.json({success: 'Successfully followed!'})
+    } catch(err) {
+        console.log(err)
+        res.json({error: err})
+    }
+}
