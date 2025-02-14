@@ -96,6 +96,21 @@ export const getUser = async (req: any, res: any, next: any) => {
     res.json(user)
 }
 
+export const updateUser = async (req: any, res: any, next: any) => {
+    const errors: any = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.errors[0].msg });
+    }
+    const {id} = req.params
+    const {...fieldsToUpdate} = req.body
+    try {
+        const user = await User.findByIdAndUpdate(id, fieldsToUpdate, { new: true })
+
+    } catch {
+
+    }
+}
+
 export const followUser = async (req: any, res: any, next: any) => {
     const {id} = req.params
     const { followerId } = req.body
